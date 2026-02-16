@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: "Business Box"
+    build: .
+    ports:
+      - "${PORT:-3122}:3000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped

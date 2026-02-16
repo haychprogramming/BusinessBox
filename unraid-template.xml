@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>BusinessBox</Name>
+  <Repository>haych/businessbox:latest</Repository>
+  <Registry>https://hub.docker.com/r/haych/businessbox</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/haych/businessbox/issues</Support>
+  <Project>https://github.com/haych/businessbox</Project>
+  <Overview>A premium, offline-first application for managing a small digital agency. Track clients, create invoices, manage expenses, and more - all from a beautiful interface with SQLite storage.</Overview>
+  <Category>Productivity: Tools:</Category>
+  <WebUI>http://[IP]:[PORT:3122]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/haych/businessbox/main/unraid-template.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/haych/businessbox/main/public/icon.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="WebUI Port" Target="3000" Default="3122" Mode="tcp" Description="Port to access BusinessBox web interface" Type="Port" Display="always" Required="true" Mask="false">3122</Config>
+  <Config Name="Data Storage" Target="/app/data" Default="/mnt/user/appdata/businessbox" Mode="rw" Description="Directory for database and application data" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/businessbox</Config>
+  <Config Name="Node Environment" Target="NODE_ENV" Default="production" Mode="" Description="Node.js environment mode" Type="Variable" Display="advanced" Required="false" Mask="false">production</Config>
+</Container>
