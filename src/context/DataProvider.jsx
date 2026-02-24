@@ -24,7 +24,8 @@ export const DataProvider = ({ children }) => {
         agencyLogo: '',
         agencyAddress: '',
         agencyEmail: '',
-        agencyPhone: ''
+        agencyPhone: '',
+        financialYearStart: 'Jan'
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

@@ -207,7 +207,7 @@ export const saveData = async (data) => {
 
                 // 4. Settings (Top-level keys in payload)
                 // We define specific keys to save as settings
-                const settingKeys = ['companyName', 'agencyLogo', 'agencyAddress', 'agencyEmail', 'agencyPhone'];
+                const settingKeys = ['companyName', 'agencyLogo', 'agencyAddress', 'agencyEmail', 'agencyPhone', 'financialYearStart'];
                 await run('DELETE FROM settings');
                 const setStmt = db.prepare('INSERT INTO settings (key, value) VALUES (?, ?)');
                 settingKeys.forEach(key => {
