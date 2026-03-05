@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  app:
-    container_name: "Business Box"
-    build: .
+  businessbox:
+    container_name: businessbox
+    image: haych/businessbox:latest
     ports:
       - "${PORT:-3122}:3000"
     volumes:

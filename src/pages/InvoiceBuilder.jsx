@@ -5,7 +5,6 @@ import { Input } from '../components/Input';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Trash2, Plus, Save, X, FileEdit, FilePlus } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/Card';
-import { motion } from 'framer-motion';
 
 export default function InvoiceBuilder() {
     const navigate = useNavigate();
@@ -13,19 +12,20 @@ export default function InvoiceBuilder() {
     const [invoices, setInvoices] = useLocalStorage('invoices', []);
     const [clients] = useLocalStorage('clients', []);
 
-    const [invoiceData, setInvoiceData] = useState({
+    const [invoiceData, setInvoiceData] = useState(() => ({
         clientId: '',
         number: `INV-${Date.now().toString().slice(-6)}`,
         date: new Date().toISOString().split('T')[0],
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         items: [{ id: 1, description: 'Service', qty: 1, price: 100 }],
         status: 'Pending'
-    });
+    }));
 
     useEffect(() => {
         if (id) {
             const invoiceToEdit = invoices.find(inv => inv.id === id);
             if (invoiceToEdit) {
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setInvoiceData(invoiceToEdit);
             }
         }
@@ -83,19 +83,9 @@ export default function InvoiceBuilder() {
         navigate('/invoices');
     };
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        show: { opacity: 1, transition: { staggerChildren: 0.1 } }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 15 },
-        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-    };
-
     return (
-        <motion.div variants={containerVariants} initial="hidden" animate="show" className="max-w-4xl mx-auto space-y-8 p-4 lg:p-8">
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="max-w-4xl mx-auto space-y-8 p-4 lg:p-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center gap-3">
                     <div className="p-3 bg-primary/10 rounded-xl text-primary">
                         {id ? <FileEdit className="h-8 w-8" /> : <FilePlus className="h-8 w-8" />}
@@ -113,9 +103,9 @@ export default function InvoiceBuilder() {
                         <Save className="mr-2 h-4 w-4" /> Save Invoice
                     </Button>
                 </div>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
                 <Card>
                     <CardHeader>
                         <CardTitle>Invoice Details</CardTitle>
@@ -170,9 +160,9 @@ export default function InvoiceBuilder() {
                         {/* Could show client details preview here */}
                     </CardContent>
                 </Card>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants}>
+            <div>
                 <Card>
                     <CardHeader>
                         <CardTitle>Items</CardTitle>
@@ -236,7 +226,7 @@ export default function InvoiceBuilder() {
                         </div>
                     </CardContent>
                 </Card>
-            </motion.div>
-        </motion.div>
+            </div>
+        </div>
     );
 }

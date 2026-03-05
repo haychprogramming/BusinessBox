@@ -9,9 +9,12 @@ export function useLocalStorage(key, initialValue) {
     const [localValue, setLocalValue] = useState(initialValue);
 
     useEffect(() => {
-        if (!loading && data && data[key] !== undefined) {
+        let isMounted = true;
+        if (!loading && data && data[key] !== undefined && isMounted) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLocalValue(data[key]);
         }
+        return () => { isMounted = false; };
     }, [loading, data, key]);
 
     const setValue = (value) => {

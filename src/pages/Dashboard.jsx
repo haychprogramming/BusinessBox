@@ -2,7 +2,6 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import PageContainer from '../components/PageContainer';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/Card';
-import { motion } from 'framer-motion';
 
 export default function Dashboard() {
     const [clients] = useLocalStorage('clients', []);
@@ -26,19 +25,6 @@ export default function Dashboard() {
         { name: 'Jun', total: totalRevenue > 4000 ? totalRevenue : 4500 },
     ];
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1 }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-    };
-
     return (
         <PageContainer className="space-y-8 max-w-7xl mx-auto">
             <div className="flex flex-col gap-2">
@@ -46,13 +32,8 @@ export default function Dashboard() {
                 <p className="text-muted-foreground">Welcome back, here is your financial overview.</p>
             </div>
 
-            <motion.div
-                className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
-                variants={containerVariants}
-                initial="hidden"
-                animate="show"
-            >
-                <motion.div variants={itemVariants}>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <div>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
@@ -62,8 +43,8 @@ export default function Dashboard() {
                             <p className="text-xs text-muted-foreground mt-1">Lifetime earnings</p>
                         </CardContent>
                     </Card>
-                </motion.div>
-                <motion.div variants={itemVariants}>
+                </div>
+                <div>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium text-muted-foreground">Active Clients</CardTitle>
@@ -73,8 +54,8 @@ export default function Dashboard() {
                             <p className="text-xs text-muted-foreground mt-1">Total: {clients.length}</p>
                         </CardContent>
                     </Card>
-                </motion.div>
-                <motion.div variants={itemVariants}>
+                </div>
+                <div>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium text-muted-foreground">Pending Invoices</CardTitle>
@@ -84,8 +65,8 @@ export default function Dashboard() {
                             <p className="text-xs text-muted-foreground mt-1">{invoices.filter(i => i.status === 'Pending').length} invoices</p>
                         </CardContent>
                     </Card>
-                </motion.div>
-                <motion.div variants={itemVariants}>
+                </div>
+                <div>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium text-muted-foreground">Overdue</CardTitle>
@@ -97,8 +78,8 @@ export default function Dashboard() {
                             <p className="text-xs text-muted-foreground mt-1">Action required</p>
                         </CardContent>
                     </Card>
-                </motion.div>
-            </motion.div>
+                </div>
+            </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4">

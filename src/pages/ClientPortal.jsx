@@ -5,7 +5,6 @@ import { Input } from '../components/Input';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, CreditCard, FileText, CheckCircle, LogIn } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/Card';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ClientPortal() {
     const navigate = useNavigate();
@@ -29,23 +28,17 @@ export default function ClientPortal() {
         .reduce((sum, i) => sum + i.total, 0);
 
     return (
-        <AnimatePresence mode="wait">
+        <div>
             {!isLoggedIn ? (
-                <motion.div
+                <div
                     key="login"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
                     className="min-h-screen flex flex-col items-center justify-center bg-background p-4 relative overflow-hidden"
                 >
                     <div className="absolute inset-0 bg-primary/5 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]" />
                     <Button variant="ghost" className="absolute top-4 left-4 z-10" onClick={() => navigate('/')}>
                         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Admin
                     </Button>
-                    <motion.div
-                        initial={{ scale: 0.95, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    <div
                         className="w-full max-w-md z-10"
                     >
                         <Card className="shadow-2xl border-border/50 bg-card/80 backdrop-blur-xl">
@@ -80,13 +73,11 @@ export default function ClientPortal() {
                                 </form>
                             </CardContent>
                         </Card>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
             ) : (
-                <motion.div
+                <div
                     key="dashboard"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
                     className="min-h-screen bg-background"
                 >
                     <header className="border-b bg-card/80 backdrop-blur-xl sticky top-0 z-40">
@@ -106,9 +97,7 @@ export default function ClientPortal() {
                     </header>
                     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
                         {/* Stats */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: 1, y: 0 }}
+                        <div
                             className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
                         >
                             <Card>
@@ -150,9 +139,9 @@ export default function ClientPortal() {
                                     </div>
                                 </CardContent>
                             </Card>
-                        </motion.div>
+                        </div>
 
-                        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                        <div>
                             <h2 className="text-xl font-bold tracking-tight mb-4">Your Invoices</h2>
                             <Card className="overflow-hidden">
                                 <CardContent className="p-0">
@@ -169,9 +158,9 @@ export default function ClientPortal() {
                                                         </div>
                                                         <div className="flex items-center gap-4">
                                                             <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${invoice.status === 'Paid' ? 'bg-green-100 text-green-800' :
-                                                                    invoice.status === 'Overdue' ? 'bg-red-100 text-red-800' :
-                                                                        invoice.status === 'Partial' ? 'bg-blue-100 text-blue-800' :
-                                                                            'bg-yellow-100 text-yellow-800'
+                                                                invoice.status === 'Overdue' ? 'bg-red-100 text-red-800' :
+                                                                    invoice.status === 'Partial' ? 'bg-blue-100 text-blue-800' :
+                                                                        'bg-yellow-100 text-yellow-800'
                                                                 }`}>
                                                                 {invoice.status}
                                                             </span>
@@ -186,10 +175,10 @@ export default function ClientPortal() {
                                     </ul>
                                 </CardContent>
                             </Card>
-                        </motion.div>
+                        </div>
                     </main>
-                </motion.div>
+                </div>
             )}
-        </AnimatePresence>
+        </div>
     );
 }

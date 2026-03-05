@@ -5,7 +5,6 @@ import { Input } from '../components/Input';
 import { Plus, Search, Trash2, DollarSign, Calendar, Paperclip, Pencil, ExternalLink, Wallet } from 'lucide-react';
 import PageContainer from '../components/PageContainer';
 import { Card, CardContent } from '../components/Card';
-import { motion } from 'framer-motion';
 import { getFinancialYear, getAllFinancialYears } from '../utils/dateUtils';
 
 export default function Expenses() {
@@ -91,19 +90,9 @@ export default function Expenses() {
 
     const totalExpenses = filteredExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        show: { opacity: 1, transition: { staggerChildren: 0.1 } }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 15 },
-        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-    };
-
     return (
         <PageContainer className="space-y-6 max-w-7xl mx-auto">
-            <motion.div variants={itemVariants} initial="hidden" animate="show" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center gap-3">
                     <div className="p-3 bg-primary/10 rounded-xl text-primary">
                         <Wallet className="h-8 w-8" />
@@ -116,9 +105,9 @@ export default function Expenses() {
                 <Button onClick={() => handleOpenModal(null)} size="lg" className="rounded-full shadow-lg hover:shadow-xl transition-shadow">
                     <Plus className="mr-2 h-5 w-5" /> Add Expense
                 </Button>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants} initial="hidden" animate="show" className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-3">
                 <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-xl p-6 shadow-sm">
                     <div className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <h3 className="tracking-tight text-sm font-medium text-muted-foreground">Total Expenses</h3>
@@ -128,9 +117,9 @@ export default function Expenses() {
                     </div>
                     <div className="text-3xl font-bold">${totalExpenses.toFixed(2)}</div>
                 </div>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants} initial="hidden" animate="show" className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1 max-w-md">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -168,9 +157,9 @@ export default function Expenses() {
                     value={dateFilter}
                     onChange={(e) => setDateFilter(e.target.value)}
                 />
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants} initial="hidden" animate="show">
+            <div>
                 <Card className="border-border/50 shadow-sm">
                     <CardContent className="p-0">
                         <div className="relative w-full overflow-auto">
@@ -235,7 +224,7 @@ export default function Expenses() {
                         </div>
                     </CardContent>
                 </Card>
-            </motion.div>
+            </div>
 
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">

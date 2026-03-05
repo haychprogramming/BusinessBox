@@ -8,7 +8,6 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import PageContainer from '../components/PageContainer';
 import { Card, CardContent } from '../components/Card';
-import { motion } from 'framer-motion';
 import { getFinancialYear, getAllFinancialYears } from '../utils/dateUtils';
 
 export default function Invoices() {
@@ -20,6 +19,7 @@ export default function Invoices() {
     const [clientFilter, setClientFilter] = useState('All');
     const [fyFilter, setFyFilter] = useState('All');
     const [financialYearStart] = useLocalStorage('financialYearStart', 'Jan');
+    const [invoiceTheme] = useLocalStorage('invoiceTheme', 'Standard');
 
     const getClientName = (clientId) => {
         const client = clients.find(c => c.id === clientId);
@@ -41,34 +41,120 @@ export default function Invoices() {
         const doc = new jsPDF();
         const client = clients.find(c => c.id === invoice.clientId);
 
-        doc.setFontSize(20);
-        doc.text('INVOICE', 14, 22);
+        if (invoiceTheme === 'Modern') {
+            // Modern Theme Layout
+            doc.setFillColor(59, 130, 246); // Primary blue color
+            doc.rect(0, 0, 210, 40, 'F');
 
-        doc.setFontSize(10);
-        doc.text(`Invoice #: ${invoice.number}`, 14, 30);
-        doc.text(`Date: ${invoice.date}`, 14, 35);
-        doc.text(`Due Date: ${invoice.dueDate}`, 14, 40);
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(24);
+            doc.setFont('helvetica', 'bold');
+            doc.text('INVOICE', 14, 25);
 
-        doc.text('Bill To:', 14, 55);
-        if (client) {
-            doc.text(client.name, 14, 60);
-            doc.text(client.email, 14, 65);
-            if (client.company) doc.text(client.company, 14, 70);
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Invoice Number: ${invoice.number}`, 120, 50);
+            doc.text(`Date of Issue: ${invoice.date}`, 120, 55);
+            doc.text(`Due Date: ${invoice.dueDate}`, 120, 60);
+
+            doc.setTextColor(100, 100, 100);
+            doc.text('BILLED TO:', 14, 50);
+            doc.setTextColor(0, 0, 0);
+            if (client) {
+                doc.setFont('helvetica', 'bold');
+                doc.text(client.name, 14, 55);
+                doc.setFont('helvetica', 'normal');
+                if (client.company) doc.text(client.company, 14, 60);
+                doc.text(client.email, 14, 65);
+            }
+
+            autoTable(doc, {
+                startY: 80,
+                headStyles: { fillColor: [59, 130, 246] },
+                head: [['Description', 'Qty', 'Price', 'Total']],
+                body: invoice.items.map(item => [
+                    item.description,
+                    item.qty,
+                    `$${item.price}`,
+                    `$${(item.qty * item.price).toFixed(2)}`
+                ]),
+            });
+
+            const finalY = doc.lastAutoTable.finalY + 15;
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text(`Total Due: $${invoice.total.toFixed(2)}`, 140, finalY);
+
+        } else if (invoiceTheme === 'Minimal') {
+            // Minimal Theme Layout
+            doc.setFontSize(28);
+            doc.setFont('times', 'normal');
+            doc.text('Invoice', 14, 30);
+
+            doc.setFontSize(10);
+            doc.text(`No. ${invoice.number}`, 14, 40);
+            doc.text(`Date: ${invoice.date}`, 14, 45);
+
+            if (client) {
+                doc.text(client.name, 140, 30);
+                if (client.company) doc.text(client.company, 140, 35);
+                doc.text(client.email, 140, 40);
+            }
+
+            doc.setDrawColor(200, 200, 200);
+            doc.line(14, 55, 196, 55);
+
+            autoTable(doc, {
+                startY: 65,
+                theme: 'plain',
+                headStyles: { textColor: [100, 100, 100], fontStyle: 'normal' },
+                head: [['Description', 'Qty', 'Price', 'Total']],
+                body: invoice.items.map(item => [
+                    item.description,
+                    item.qty,
+                    `$${item.price}`,
+                    `$${(item.qty * item.price).toFixed(2)}`
+                ]),
+            });
+
+            const finalY = doc.lastAutoTable.finalY + 10;
+            doc.line(14, finalY, 196, finalY);
+            doc.setFontSize(12);
+            doc.text(`Total USD`, 140, finalY + 10);
+            doc.text(`$${invoice.total.toFixed(2)}`, 170, finalY + 10);
+
+        } else {
+            // Standard Theme Layout
+            doc.setFontSize(20);
+            doc.text('INVOICE', 14, 22);
+
+            doc.setFontSize(10);
+            doc.text(`Invoice #: ${invoice.number}`, 14, 30);
+            doc.text(`Date: ${invoice.date}`, 14, 35);
+            doc.text(`Due Date: ${invoice.dueDate}`, 14, 40);
+
+            doc.text('Bill To:', 14, 55);
+            if (client) {
+                doc.text(client.name, 14, 60);
+                doc.text(client.email, 14, 65);
+                if (client.company) doc.text(client.company, 14, 70);
+            }
+
+            autoTable(doc, {
+                startY: 80,
+                head: [['Description', 'Qty', 'Price', 'Total']],
+                body: invoice.items.map(item => [
+                    item.description,
+                    item.qty,
+                    `$${item.price}`,
+                    `$${(item.qty * item.price).toFixed(2)}`
+                ]),
+            });
+
+            const finalY = doc.lastAutoTable.finalY + 10;
+            doc.text(`Total: $${invoice.total.toFixed(2)}`, 14, finalY);
         }
-
-        autoTable(doc, {
-            startY: 80,
-            head: [['Description', 'Qty', 'Price', 'Total']],
-            body: invoice.items.map(item => [
-                item.description,
-                item.qty,
-                `$${item.price}`,
-                `$${(item.qty * item.price).toFixed(2)}`
-            ]),
-        });
-
-        const finalY = doc.lastAutoTable.finalY + 10;
-        doc.text(`Total: $${invoice.total.toFixed(2)}`, 14, finalY);
 
         doc.save(`invoice_${invoice.number}.pdf`);
     };
@@ -127,11 +213,6 @@ export default function Invoices() {
 
         setInvoices(invoices.map(inv => inv.id === updatedInvoice.id ? updatedInvoice : inv));
         setIsPaymentModalOpen(false);
-    };
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        show: { opacity: 1, transition: { staggerChildren: 0.1 } }
     };
 
     const itemVariants = {

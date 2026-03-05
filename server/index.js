@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import process from 'process';
 import bodyParser from 'body-parser';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -29,6 +29,7 @@ app.post('/api/data', async (req, res) => {
         await saveData(req.body);
         res.json({ success: true });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: 'Failed to save data' });
     }
 });

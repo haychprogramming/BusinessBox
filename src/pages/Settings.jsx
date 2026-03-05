@@ -4,7 +4,6 @@ import { Download, Upload, Trash2, AlertTriangle, Save, SettingsIcon } from 'luc
 import { useState, useEffect } from 'react';
 import PageContainer from '../components/PageContainer';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/Card';
-import { motion } from 'framer-motion';
 
 export default function Settings() {
     // Persistent Store Access
@@ -16,6 +15,7 @@ export default function Settings() {
     const [savedAgencyEmail, setAgencyEmail] = useLocalStorage('agencyEmail', '');
     const [savedAgencyPhone, setAgencyPhone] = useLocalStorage('agencyPhone', '');
     const [savedFinancialYearStart, setFinancialYearStart] = useLocalStorage('financialYearStart', 'Jan');
+    const [savedInvoiceTheme, setInvoiceTheme] = useLocalStorage('invoiceTheme', 'Standard');
 
     // Local Form State
     const [formData, setFormData] = useState({
@@ -24,20 +24,27 @@ export default function Settings() {
         agencyAddress: savedAgencyAddress,
         agencyEmail: savedAgencyEmail,
         agencyPhone: savedAgencyPhone,
-        financialYearStart: savedFinancialYearStart
+        financialYearStart: savedFinancialYearStart,
+        invoiceTheme: savedInvoiceTheme
     });
 
     // Sync form with storage on mount (or if storage updates externally)
     useEffect(() => {
-        setFormData({
-            companyName: savedCompanyName,
-            agencyLogo: savedAgencyLogo,
-            agencyAddress: savedAgencyAddress,
-            agencyEmail: savedAgencyEmail,
-            agencyPhone: savedAgencyPhone,
-            financialYearStart: savedFinancialYearStart
-        });
-    }, [savedCompanyName, savedAgencyLogo, savedAgencyAddress, savedAgencyEmail, savedAgencyPhone, savedFinancialYearStart]);
+        let isMounted = true;
+        if (isMounted) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setFormData({
+                companyName: savedCompanyName,
+                agencyLogo: savedAgencyLogo,
+                agencyAddress: savedAgencyAddress,
+                agencyEmail: savedAgencyEmail,
+                agencyPhone: savedAgencyPhone,
+                financialYearStart: savedFinancialYearStart,
+                invoiceTheme: savedInvoiceTheme
+            });
+        }
+        return () => { isMounted = false; };
+    }, [savedCompanyName, savedAgencyLogo, savedAgencyAddress, savedAgencyEmail, savedAgencyPhone, savedFinancialYearStart, savedInvoiceTheme]);
 
     const handleChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -50,6 +57,7 @@ export default function Settings() {
         setAgencyEmail(formData.agencyEmail);
         setAgencyPhone(formData.agencyPhone);
         setFinancialYearStart(formData.financialYearStart);
+        setInvoiceTheme(formData.invoiceTheme);
         alert('Settings saved successfully!');
     };
 
@@ -74,7 +82,8 @@ export default function Settings() {
                 agencyAddress: savedAgencyAddress,
                 agencyEmail: savedAgencyEmail,
                 agencyPhone: savedAgencyPhone,
-                financialYearStart: savedFinancialYearStart
+                financialYearStart: savedFinancialYearStart,
+                invoiceTheme: savedInvoiceTheme
             }
         };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -105,11 +114,12 @@ export default function Settings() {
                             setAgencyEmail(data.settings.agencyEmail || '');
                             setAgencyPhone(data.settings.agencyPhone || '');
                             setFinancialYearStart(data.settings.financialYearStart || 'Jan');
+                            setInvoiceTheme(data.settings.invoiceTheme || 'Standard');
                             // Updates will flow back via useEffect
                         }
                         alert('Data imported successfully!');
                     }
-                } catch (error) {
+                } catch {
                     alert('Invalid JSON file');
                 }
             };
@@ -125,19 +135,9 @@ export default function Settings() {
         }
     };
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        show: { opacity: 1, transition: { staggerChildren: 0.1 } }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 15 },
-        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-    };
-
     return (
         <PageContainer className="max-w-4xl mx-auto space-y-8">
-            <motion.div variants={itemVariants} initial="hidden" animate="show" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center gap-3">
                     <div className="p-3 bg-primary/10 rounded-xl text-primary">
                         <SettingsIcon className="h-8 w-8" />
@@ -150,9 +150,9 @@ export default function Settings() {
                 <Button onClick={handleSave} size="lg" className="rounded-full shadow-md">
                     <Save className="mr-2 h-5 w-5" /> Save Changes
                 </Button>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants} initial="hidden" animate="show" className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2">
                 <Card>
                     <CardHeader>
                         <CardTitle>Agency Profile</CardTitle>
@@ -224,6 +224,18 @@ export default function Settings() {
                                 <option value="Jul">Australian Financial Year (Jul - Jun)</option>
                             </select>
                         </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Invoice Theme</label>
+                            <select
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                value={formData.invoiceTheme}
+                                onChange={(e) => handleChange('invoiceTheme', e.target.value)}
+                            >
+                                <option value="Standard">Standard</option>
+                                <option value="Modern">Modern</option>
+                                <option value="Minimal">Minimal</option>
+                            </select>
+                        </div>
                     </CardContent>
                 </Card>
 
@@ -274,7 +286,7 @@ export default function Settings() {
                         </div>
                     </CardContent>
                 </Card>
-            </motion.div>
+            </div>
         </PageContainer>
     );
 }

@@ -1,13 +1,9 @@
 import { cn } from '../lib/utils';
 import React from 'react';
-import { motion } from 'framer-motion';
 
 const Button = React.forwardRef(({ className, variant = "default", size = "default", ...props }, ref) => {
     return (
-        <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        <button
             ref={ref}
             className={cn(
                 "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
