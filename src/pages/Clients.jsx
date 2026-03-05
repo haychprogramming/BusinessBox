@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
@@ -13,7 +13,7 @@ export default function Clients() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [editingClient, setEditingClient] = useState(null);
-    const fileInputRef = React.useRef(null);
+    const fileInputRef = useRef(null);
 
     // Form state
     const [formData, setFormData] = useState({
