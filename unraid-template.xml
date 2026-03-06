@@ -11,7 +11,7 @@
   <Project>https://github.com/haych/businessbox</Project>
   <Overview>A premium, offline-first application for managing a small digital agency. Track clients, create invoices, manage expenses, and more - all from a beautiful interface with SQLite storage.</Overview>
   <Category>Productivity: Tools:</Category>
-  <WebUI>http://[IP]:[PORT:3000]</WebUI>
+  <WebUI>http://[IP]:[PORT:3000]/</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/haych/businessbox/main/unraid-template.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/haych/businessbox/main/public/icon.png</Icon>
   <ExtraParams/>
